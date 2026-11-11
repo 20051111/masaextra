@@ -4,6 +4,7 @@ import com.example.masaextra.network.HelloPacket;
 import com.example.masaextra.network.HiPacket;
 import com.example.masaextra.network.ServerSupport;
 import fi.dy.masa.malilib.config.ConfigManager;
+import com.example.masaextra.compat.TweakermoreAutoCollectCompat;
 import com.example.masaextra.compat.TweakerooSnapAimCompat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -112,6 +113,13 @@ public class ExactPlaceClient implements ClientModInitializer {
                 TweakerooSnapAimCompat.register();
             } catch (Throwable t) {
                 LOGGER.warn("[masaextra] Tweakeroo snap aim alignment unavailable", t);
+            }
+        }
+        if (FabricLoader.getInstance().isModLoaded("tweakermore")) {
+            try {
+                TweakermoreAutoCollectCompat.register();
+            } catch (Throwable t) {
+                LOGGER.warn("[masaextra] Tweakermore auto-collect integration unavailable", t);
             }
         }
     }

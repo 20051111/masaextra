@@ -36,6 +36,9 @@ public final class ExactPlaceConfig implements IConfigHandler {
     public static final ConfigHotkey SNAP_TO_BLOCK_CENTER_HOTKEY =
             new ConfigHotkey("masaextraSnapAlignHotkey", "",
                     "Hold to snap your position to the centre of the block you stand on");
+    public static final ConfigBoolean SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT =
+            new ConfigBoolean("masaextraSuppressEasyPlaceOnAutoCollect", true,
+                    "Turn easy place off while Tweakermore's auto collect material list item is running, then restore it");
     public static final ConfigBoolean REFRESH_GAMMA_ON_JOIN =
             new ConfigBoolean("masaextraRefreshGammaOnJoin", true,
                     "Re-apply Tweakeroo's gamma override after the first world join");
@@ -85,7 +88,8 @@ public final class ExactPlaceConfig implements IConfigHandler {
             if (root.has("masaextraSnapAlignHotkey")) {
                 SNAP_TO_BLOCK_CENTER_HOTKEY.setValueFromString(root.get("masaextraSnapAlignHotkey").getAsString());
             }
-        read(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
+        read(root, "masaextraSuppressEasyPlaceOnAutoCollect", SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT);
+            read(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             read(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             read(root, "masaextraChatDebug", CHAT_DEBUG);
             read(root, "easyPlaceV2ProtocolExtra", EASY_PLACE_V2_PROTOCOL_EXTRA);
@@ -108,7 +112,8 @@ public final class ExactPlaceConfig implements IConfigHandler {
             write(root, "masaextraSnapAlignEnabled", SNAP_TO_BLOCK_CENTER_ENABLED);
             root.addProperty("masaextraSnapAlignTrigger", SNAP_TO_BLOCK_CENTER_TRIGGER.getOptionListValue().getStringValue());
             root.addProperty("masaextraSnapAlignHotkey", SNAP_TO_BLOCK_CENTER_HOTKEY.getStringValue());
-        write(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
+        write(root, "masaextraSuppressEasyPlaceOnAutoCollect", SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT);
+            write(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             write(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             write(root, "masaextraChatDebug", CHAT_DEBUG);
             write(root, "easyPlaceV2ProtocolExtra", EASY_PLACE_V2_PROTOCOL_EXTRA);

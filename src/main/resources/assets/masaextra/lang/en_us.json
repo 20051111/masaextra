@@ -30,6 +30,8 @@
   "config.comment.masaextrasnapalignenabled": "While the configured trigger is active, snap your position to the centre of the block you stand on. Only applies while standing still.",
   "config.name.masaextrasnapaligntrigger": "Snap trigger",
   "config.comment.masaextrasnapaligntrigger": "Snap aim: follow Tweakeroo's snap aim toggle. Hotkey: only while the hotkey below is held.",
+  "config.name.masaextrasuppresseasyplaceonautocollect": "Suspend easy place during auto collect",
+  "config.comment.masaextrasuppresseasyplaceonautocollect": "Turn easy place off while Tweakermore's auto collect material list item is running, then restore the previous value when it stops.",
   "config.name.masaextrasnapalignhotkey": "Snap hotkey",
   "config.comment.masaextrasnapalignhotkey": "Hold to snap your position to the centre of the block you stand on. Used when the snap trigger is set to Hotkey.",
   "key.masaextra.open_config": "Open MasaExtra config",

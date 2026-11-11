@@ -41,6 +41,10 @@ dependencies {
     // Compile only: the integration sits behind an isModLoaded check and is
     // never referenced when the mod is absent.
     modCompileOnly files('libs/tweakeroo-fabric-1.20.4-0.19.4.jar')
+
+    // tweakermore supplies the auto-collect-material-list toggle that suspends
+    // easy place. Compile only, gated behind an isModLoaded check.
+    modCompileOnly files('libs/tweakermore-v3.33.2-mc1.20.4.jar')
 }
 
 processResources {

@@ -53,6 +53,7 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_TRIGGER));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEBUG_MODE));
@@ -71,6 +72,7 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_TRIGGER));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
             }
             case OMMC -> list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));

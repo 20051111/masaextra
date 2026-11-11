@@ -30,6 +30,8 @@
   "config.comment.masaextrasnapalignenabled": "触发条件满足时，把玩家位置吸附到所站方块的正中心。仅在静止时生效。",
   "config.name.masaextrasnapaligntrigger": "吸附触发方式",
   "config.comment.masaextrasnapaligntrigger": "吸附瞄准：跟随 Tweakeroo 的吸附瞄准开关。热键：仅在按住下方热键时生效。",
+  "config.name.masaextrasuppresseasyplaceonautocollect": "自动取材料时暂停轻松放置",
+  "config.comment.masaextrasuppresseasyplaceonautocollect": "Tweakermore 的「按照原理图材料列表拿材料」运行期间自动关闭轻松放置，结束后恢复为原来的状态。",
   "config.name.masaextrasnapalignhotkey": "吸附热键",
   "config.comment.masaextrasnapalignhotkey": "按住时把玩家位置吸附到所站方块正中心。当吸附触发方式设为「热键」时使用。",
   "key.masaextra.open_config": "打开 MasaExtra 配置",
