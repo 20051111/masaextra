@@ -24,8 +24,6 @@
   "config.comment.masaextraommchighlightstrictmatch": "OMMC highlightEntity: use strict entity id matching instead of substring matching, so 'item' no longer highlights item frames / item displays.",
   "config.name.easyplacev2protocolextra": "Encode exact block state (V2 protocol)",
   "config.comment.easyplacev2protocolextra": "Send the full block state through the easy place V2 protocol, so stairs, rails, trapdoors, levers, vines and similar blocks are placed in the exact schematic orientation instead of only facing.",
-  "config.name.easyplacerailblocknoshapeupdate": "Keep exact rail shape",
-  "config.comment.easyplacerailblocknoshapeupdate": "After placing a rail, do not let it re-connect with neighbouring rails; keep the shape stored in the schematic.",
   "config.name.masaextrasnapalignenabled": "Snap position to block centre",
   "config.comment.masaextrasnapalignenabled": "While the configured trigger is active, snap your position to the centre of the block you stand on. Only applies while standing still.",
   "config.name.masaextrasnapaligntrigger": "Snap trigger",

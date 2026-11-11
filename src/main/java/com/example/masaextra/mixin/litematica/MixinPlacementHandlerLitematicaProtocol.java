@@ -35,7 +35,9 @@ import static com.example.masaextra.protocol.EasyPlaceExtraProtocolHelper.isExtr
 @Environment(EnvType.CLIENT)
 public abstract class MixinPlacementHandlerLitematicaProtocol {
     private static boolean masaextra$protocolDisabled() {
-        return !ServerSupport.isSupportsExtraProtocol()
+        return !ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.USE_SERVER_EXACT.getBooleanValue()
+                || !ServerSupport.isSupportsExtraProtocol()
                 || !ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA.getBooleanValue();
     }
 

@@ -1,5 +1,6 @@
 package com.example.masaextra.mixin.vanilla;
 
+import com.example.masaextra.ExactPlaceConfig;
 import com.example.masaextra.protocol.BlockPlacer;
 import com.example.masaextra.protocol.CarpetExtraCompat;
 import com.example.masaextra.server.ExactPlaceServer;
@@ -76,6 +77,10 @@ public abstract class MixinStandingAndWallBlockItemVanillaProtocol extends Block
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void masaextra$getAlternatePlacement(BlockPlaceContext context,
                                                  CallbackInfoReturnable<BlockState> cir) {
+        if (!ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.USE_SERVER_EXACT.getBooleanValue()) {
+            return;
+        }
         // EarlyCompat: if (IS_SERVER_ENV) { ... }
         if (!context.getLevel().isClientSide()) {
             if (!(context.getPlayer() instanceof ServerPlayer player)
@@ -98,7 +103,14 @@ public abstract class MixinStandingAndWallBlockItemVanillaProtocol extends Block
         // EarlyCompat: if (!this.canPlace(context, tryAlternative)) tryAlternative = null;
         if (!this.canPlace(context, tryAlternative)) {
             BlockPlacer.logRejected(tryAlternative, context);
-            tryAlternative = null;
+            if (ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT.getBooleanValue()) {
+                // Refuse outright instead of letting vanilla substitute a floor
+                // torch for a wall torch whose support block is missing.
+                tryAlternative = null;
+            } else {
+                // Hand the decision back to vanilla, which may place a substitute.
+                return;
+            }
         }
 
         cir.setReturnValue(tryAlternative);

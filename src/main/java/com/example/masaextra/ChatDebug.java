@@ -18,7 +18,8 @@ public final class ChatDebug {
     }
 
     public static void state(String prefix, BlockState state, BlockPos pos) {
-        if (!ExactPlaceConfig.CHAT_DEBUG.getBooleanValue()) {
+        if (!ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.CHAT_DEBUG.getBooleanValue()) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
@@ -34,7 +35,8 @@ public final class ChatDebug {
     }
 
     public static void info(String prefix, String message) {
-        if (!ExactPlaceConfig.CHAT_DEBUG.getBooleanValue()) {
+        if (!ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.CHAT_DEBUG.getBooleanValue()) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();

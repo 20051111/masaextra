@@ -18,17 +18,17 @@ public final class ExactPlaceConfig implements IConfigHandler {
     public static final ExactPlaceConfig INSTANCE = new ExactPlaceConfig();
 
     public static final ConfigBoolean ENABLED =
-            new ConfigBoolean("masaextraEnabled", true, "Master switch for Exact Place");
+            new ConfigBoolean("masaextraEnabled", false, "Master switch for Exact Place");
     public static final ConfigBoolean USE_SERVER_EXACT =
-            new ConfigBoolean("masaextraUseServerExact", true,
+            new ConfigBoolean("masaextraUseServerExact", false,
                     "Use the server exact-placement protocol when the server supports it");
     public static final ConfigBoolean DEBUG_MODE =
             new ConfigBoolean("masaextraDebugMode", false, "Print diagnostic messages to the game log");
     public static final ConfigBoolean SUPPRESS_MISSING_SUPPORT =
-            new ConfigBoolean("masaextraSuppressMissingSupport", true,
+            new ConfigBoolean("masaextraSuppressMissingSupport", false,
                     "Cancel placement instead of letting easy place put a floor torch when the wall is missing");
     public static final ConfigBoolean SNAP_TO_BLOCK_CENTER_ENABLED =
-            new ConfigBoolean("masaextraSnapAlignEnabled", true,
+            new ConfigBoolean("masaextraSnapAlignEnabled", false,
                     "Snap your position to the centre of the block you stand on");
     public static final ConfigOptionList SNAP_TO_BLOCK_CENTER_TRIGGER =
             new ConfigOptionList("masaextraSnapAlignTrigger", SnapAlignTrigger.SNAP_AIM,
@@ -37,10 +37,10 @@ public final class ExactPlaceConfig implements IConfigHandler {
             new ConfigHotkey("masaextraSnapAlignHotkey", "",
                     "Hold to snap your position to the centre of the block you stand on");
     public static final ConfigBoolean SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT =
-            new ConfigBoolean("masaextraSuppressEasyPlaceOnAutoCollect", true,
+            new ConfigBoolean("masaextraSuppressEasyPlaceOnAutoCollect", false,
                     "Turn easy place off while Tweakermore's auto collect material list item is running, then restore it");
     public static final ConfigBoolean REFRESH_GAMMA_ON_JOIN =
-            new ConfigBoolean("masaextraRefreshGammaOnJoin", true,
+            new ConfigBoolean("masaextraRefreshGammaOnJoin", false,
                     "Re-apply Tweakeroo's gamma override after the first world join");
     public static final ConfigBoolean CHAT_DEBUG =
             new ConfigBoolean("masaextraChatDebug", false,
@@ -54,13 +54,9 @@ public final class ExactPlaceConfig implements IConfigHandler {
 
     // --- EarlyCompat "easyPlaceV2ProtocolExtra" equivalents -----------------
     public static final ConfigBoolean EASY_PLACE_V2_PROTOCOL_EXTRA =
-            new ConfigBoolean("easyPlaceV2ProtocolExtra", true,
+            new ConfigBoolean("easyPlaceV2ProtocolExtra", false,
                     "Encode the full block state into the easy place V2 protocol, so stairs, rails, "
                             + "trapdoors, levers and similar blocks are placed in the exact schematic orientation");
-    public static final ConfigBoolean EASY_PLACE_RAIL_BLOCK_NO_SHAPE_UPDATE =
-            new ConfigBoolean("easyPlaceRailBlockNoShapeUpdate", true,
-                    "Keep the exact rail shape from the schematic instead of letting the rail re-connect "
-                            + "with its neighbours after placement");
 
     private static final Path FILE =
             FabricLoader.getInstance().getConfigDir().resolve("masaextra-client.json");
@@ -93,7 +89,6 @@ public final class ExactPlaceConfig implements IConfigHandler {
             read(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             read(root, "masaextraChatDebug", CHAT_DEBUG);
             read(root, "easyPlaceV2ProtocolExtra", EASY_PLACE_V2_PROTOCOL_EXTRA);
-            read(root, "easyPlaceRailBlockNoShapeUpdate", EASY_PLACE_RAIL_BLOCK_NO_SHAPE_UPDATE);
             if (root.has("masaextraCooldownMs")) {
                 EASY_PLACE_COOLDOWN_MS.setIntegerValue(root.get("masaextraCooldownMs").getAsInt());
             }
@@ -117,7 +112,6 @@ public final class ExactPlaceConfig implements IConfigHandler {
             write(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             write(root, "masaextraChatDebug", CHAT_DEBUG);
             write(root, "easyPlaceV2ProtocolExtra", EASY_PLACE_V2_PROTOCOL_EXTRA);
-            write(root, "easyPlaceRailBlockNoShapeUpdate", EASY_PLACE_RAIL_BLOCK_NO_SHAPE_UPDATE);
             root.addProperty("masaextraCooldownMs", EASY_PLACE_COOLDOWN_MS.getIntegerValue());
 
             Files.createDirectories(FILE.getParent());

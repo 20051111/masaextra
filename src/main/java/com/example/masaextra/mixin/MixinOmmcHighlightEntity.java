@@ -38,7 +38,8 @@ public class MixinOmmcHighlightEntity {
     )
     @SuppressWarnings("unchecked")
     private void masaextra$ommcStrictMatch(CallbackInfoReturnable<Boolean> cir) {
-        if (!ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH.getBooleanValue()) {
+        if (!ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH.getBooleanValue()) {
             return;
         }
         Entity self = (Entity) (Object) this;

@@ -24,8 +24,6 @@
   "config.comment.masaextraommchighlightstrictmatch": "开启后，OMMC 的高亮实体白名单改为严格匹配：item 只匹配 minecraft:item，不再误高亮展示框等。",
   "config.name.easyplacev2protocolextra": "编码完整方块状态（V2 协议）",
   "config.comment.easyplacev2protocolextra": "把完整方块状态通过轻松放置 V2 协议发送到服务端，使楼梯、铁轨、活板门、拉杆、藤蔓等方块按投影里的精确朝向放置，而不再只有水平朝向。",
-  "config.name.easyplacerailblocknoshapeupdate": "保持铁轨精确形状",
-  "config.comment.easyplacerailblocknoshapeupdate": "放置铁轨后不再与其相邻铁轨重新连接，保持投影中存储的形状。",
   "config.name.masaextrasnapalignenabled": "位置吸附到方块中心",
   "config.comment.masaextrasnapalignenabled": "触发条件满足时，把玩家位置吸附到所站方块的正中心。仅在静止时生效。",
   "config.name.masaextrasnapaligntrigger": "吸附触发方式",

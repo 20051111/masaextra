@@ -26,9 +26,9 @@ public final class ServerConfig {
      * client option so the server only decodes the extra protocol when the client
      * was told to send it.
      */
-    public static boolean easyPlaceV2ProtocolExtra = true;
+    public static boolean easyPlaceV2ProtocolExtra = false;
     /** Server-side counterpart of the client's keep-exact-rail-shape option. */
-    public static boolean easyPlaceRailBlockNoShapeUpdate = true;
+    public static boolean easyPlaceRailBlockNoShapeUpdate = false;
     public static final Set<String> blacklist = new HashSet<>(Set.of(
             "minecraft:bedrock",
             "minecraft:command_block",

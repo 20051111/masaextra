@@ -49,7 +49,6 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_COOLDOWN_MS));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA));
-                list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_RAIL_BLOCK_NO_SHAPE_UPDATE));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_TRIGGER));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
@@ -64,7 +63,6 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_COOLDOWN_MS));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA));
-                list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_RAIL_BLOCK_NO_SHAPE_UPDATE));
             }
             case TWEAKEROO -> {
                 // The position snap is driven by Tweakeroo's snap aim or by its own

@@ -15,7 +15,9 @@ public final class GammaRefresher {
     }
 
     public static void onJoin() {
-        if (refreshed || !ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN.getBooleanValue()) {
+        if (refreshed
+                || !ExactPlaceConfig.ENABLED.getBooleanValue()
+                || !ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN.getBooleanValue()) {
             return;
         }
         ticksUntilRefresh = 20;

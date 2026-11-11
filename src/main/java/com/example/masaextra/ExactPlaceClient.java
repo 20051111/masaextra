@@ -58,7 +58,9 @@ public class ExactPlaceClient implements ClientModInitializer {
             ServerSupport.setAvailable(false);
             handshakeTicks = 0;
             warnedHandshakeTimeout = false;
-            sendHi("JOIN");
+            if (masaextra$isActive()) {
+                sendHi("JOIN");
+            }
             GammaRefresher.onJoin();
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
@@ -72,7 +74,8 @@ public class ExactPlaceClient implements ClientModInitializer {
             // Keep retrying while connected but unconfirmed: the JOIN event can
             // fire before the channel exists, and a missed HI_ACK would otherwise
             // disable the whole protocol for the session.
-            if (client.player == null || ServerSupport.isSupportsExtraProtocol()) {
+            if (client.player == null || ServerSupport.isSupportsExtraProtocol()
+                    || !masaextra$isActive()) {
                 return;
             }
             if (handshakeTicks >= MAX_HANDSHAKE_TICKS) {
@@ -122,6 +125,16 @@ public class ExactPlaceClient implements ClientModInitializer {
                 LOGGER.warn("[masaextra] Tweakermore auto-collect integration unavailable", t);
             }
         }
+    }
+
+    /**
+     * Master switch plus the "use the server protocol" option. Both default to
+     * false, so a fresh install never sends the handshake until the user turns
+     * the feature on, and no protocol rewriting happens either.
+     */
+    private static boolean masaextra$isActive() {
+        return ExactPlaceConfig.ENABLED.getBooleanValue()
+                && ExactPlaceConfig.USE_SERVER_EXACT.getBooleanValue();
     }
 
     /**
