@@ -1,0 +1,62 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+}
+
+repositories {
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+    }
+}
+
+/**
+ * Build-environment note (not a mod requirement): this tree sits on a volume
+ * where directories carried a Low integrity label plus a "deny
+ * delete-subdirectories" entry, which made Java's Files.isWritable() report
+ * false everywhere. Loom writes its layered mappings through the NIO zip
+ * filesystem and checks that flag, so it failed with ReadOnlyFileSystemException
+ * before compiling anything. Fixed outside this script by raising the integrity
+ * level and dropping that deny entry; nothing here depends on it.
+ */
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    modImplementation "maven.modrinth:litematica:${litematica_version}"
+    modImplementation "maven.modrinth:malilib:${malilib_version}"
+    modCompileOnly "maven.modrinth:modmenu:${modmenu_version}"
+
+    // MixinExtras ships with modern Fabric Loader at runtime, so this is compile
+    // only: the @Local / @WrapOperation annotations need the API to resolve.
+    compileOnly files('libs/mixinextras-fabric-0.5.5.jar')
+
+    // carpet-extra supplies carpet's accurateBlockPlacement rule. Compile only:
+    // it is never required at runtime, all access is reflective or gated.
+    modCompileOnly files('libs/carpet-extra-1.20.3-1.4.128.jar')
+
+    // tweakeroo supplies the snap aim toggle the position snap hooks into.
+    // Compile only: the integration sits behind an isModLoaded check and is
+    // never referenced when the mod is absent.
+    modCompileOnly files('libs/tweakeroo-fabric-1.20.4-0.19.4.jar')
+}
+
+processResources {
+    def modVersion = project.version
+    inputs.property 'version', modVersion
+    filesMatching('fabric.mod.json') {
+        expand 'version': modVersion
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+    it.options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
