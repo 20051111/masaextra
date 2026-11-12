@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "masaextra",
   "version": "${version}",
-  "name": "MasaExtra",
-  "description": "MasaExtra: Exact Place + client utilities for Masa mods.",
+  "name": "Masa Extra",
+  "description": "Masa Extra: Exact Place + client utilities for Masa mods.",
   "authors": ["test"],
   "license": "MIT",
   "environment": "*",
@@ -30,6 +30,9 @@
     "litematica": "*",
     "malilib": "*",
     "modmenu": "*",
-    "ommc": "*"
+    "ommc": "*",
+    "tweakeroo": "*",
+    "tweakermore": "*",
+    "carpet-extra": "*"
   }
 }

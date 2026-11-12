@@ -1,4 +1,4 @@
-# MasaExtra
+# Masa Extra
 
 Minecraft **1.20.4** Fabric 模组。把 [EarlyCompat](https://github.com/chenjunfu2/EarlyCompat) 的精确方块放置（Easy Place）逻辑完整移植过来，让 Litematica 的轻松放置在服务端支持精确协议时，能还原投影里的完整方块状态。
 
@@ -19,10 +19,16 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 
 ### 可选模组集成
 
-- **Tweakeroo**：位置吸附到方块中心（上升沿触发一次）、进入世界刷新 Gamma。
+- **Tweakeroo**：位置吸附到方块中心（触发上升沿对齐一次）、进入世界刷新 Gamma、耕地音效去重。
 - **Tweakermore**：自动取材料期间暂停轻松放置。
 
 所有集成都在 `isModLoaded` 检查后按需加载，缺失对应模组时功能自动禁用，不会崩溃。
+
+### 其它修正
+
+- **自动开关轻松放置**：只在准星指向投影方块时开启 easy place，移开即关闭，判定复用 Litematica 自己的射线检测。带一个可绑定热键，按一下切换。
+- **耕地音效去重**：Tweakeroo 的快速连点每 tick 会对同一格调用十次 `useOn`，而 `HoeItem` 在判 `isClientSide` 之前就播放音效，导致一次耕地响十声。开启后同格同 tick 只响一次。
+- **开关提示本地化**：修正 malilib 把 `malilib.message.on` 当键（实际键是 `malilib.message.value.on`）导致的字幕显示键名问题，对所有 mod 的开关提示都生效。
 
 ---
 
@@ -31,7 +37,7 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 ### 客户端
 
 文件：`config/masaextra-client.json`
-游戏内：通过 GUI 的 `全部` / `Litematica` / `Tweakeroo` / `OMMC` 四个页签修改。
+游戏内：通过 GUI 的 `全部` / `Litematica` / `Tweakeroo` / `Tweakermore` / `OMMC` 五个页签修改。
 
 | 配置项 | 键名 | 类型 | 默认值 |
 |---|---|---|---|
@@ -39,11 +45,14 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 | 服务端精确放置 | `masaextraUseServerExact` | 布尔 | `false` |
 | 编码完整方块状态（V2 协议） | `easyPlaceV2ProtocolExtra` | 布尔 | `false` |
 | 支撑缺失时取消 | `masaextraSuppressMissingSupport` | 布尔 | `false` |
+| 自动开关轻松放置 | `masaextraAutoToggleEasyPlace` | 布尔 + 热键 | `false` |
+| 自动开关检测距离 | `masaextraAutoToggleEasyPlaceRange` | 浮点 `1`–`32` | `6.0` |
 | 同位置冷却（毫秒） | `masaextraCooldownMs` | 整数 `0`–`5000` | `250` |
 | 位置吸附到方块中心 | `masaextraSnapAlignEnabled` | 布尔 | `false` |
 | 吸附触发方式 | `masaextraSnapAlignTrigger` | 枚举 `snap_aim` / `hotkey` | `snap_aim` |
 | 吸附热键 | `masaextraSnapAlignHotkey` | 热键 | 空 |
 | 自动取材料时暂停轻松放置 | `masaextraSuppressEasyPlaceOnAutoCollect` | 布尔 | `false` |
+| 耕地音效去重 | `masaextraDedupeTillSound` | 布尔 | `false` |
 | 进入世界刷新 Gamma | `masaextraRefreshGammaOnJoin` | 布尔 | `false` |
 | OMMC 高亮实体严格匹配 | `masaextraOmmcHighlightStrictMatch` | 布尔 | `false` |
 | 调试模式 | `masaextraDebugMode` | 布尔 | `false` |

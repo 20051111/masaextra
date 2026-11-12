@@ -1,8 +1,8 @@
 package com.example.masaextra.mixin.vanilla;
 
-import com.example.masaextra.ExactPlaceConfig;
 import com.example.masaextra.protocol.BlockPlacer;
 import com.example.masaextra.protocol.CarpetExtraCompat;
+import com.example.masaextra.protocol.ClientOptions;
 import com.example.masaextra.server.ExactPlaceServer;
 import com.example.masaextra.server.ServerConfig;
 import net.minecraft.core.Direction;
@@ -77,18 +77,21 @@ public abstract class MixinStandingAndWallBlockItemVanillaProtocol extends Block
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void masaextra$getAlternatePlacement(BlockPlaceContext context,
                                                  CallbackInfoReturnable<BlockState> cir) {
-        if (!ExactPlaceConfig.ENABLED.getBooleanValue()
-                || !ExactPlaceConfig.USE_SERVER_EXACT.getBooleanValue()) {
-            return;
-        }
+        // this mixin is registered for both sides, and ExactPlaceConfig lives in
+        // malilib which a dedicated server does not have. Client-only options may
+        // only be read inside the client branch.
+        boolean clientSide = context.getLevel().isClientSide();
+
         // EarlyCompat: if (IS_SERVER_ENV) { ... }
-        if (!context.getLevel().isClientSide()) {
+        if (!clientSide) {
             if (!(context.getPlayer() instanceof ServerPlayer player)
                     || !ExactPlaceServer.isExtraProtocolPlayer(player)
                     || !CarpetExtraCompat.getAccurateBlockPlacement()) {
                 return;
             }
-        } else if (!ServerConfig.easyPlaceV2ProtocolExtra) {
+        } else if (!ClientOptions.enabled
+                || !ClientOptions.useServerExact
+                || !ServerConfig.easyPlaceV2ProtocolExtra) {
             // See the class note: integrated servers are "client side" here.
             return;
         }
@@ -103,12 +106,12 @@ public abstract class MixinStandingAndWallBlockItemVanillaProtocol extends Block
         // EarlyCompat: if (!this.canPlace(context, tryAlternative)) tryAlternative = null;
         if (!this.canPlace(context, tryAlternative)) {
             BlockPlacer.logRejected(tryAlternative, context);
-            if (ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT.getBooleanValue()) {
-                // Refuse outright instead of letting vanilla substitute a floor
-                // torch for a wall torch whose support block is missing.
+            // The server always refuses (EarlyCompat's original behaviour), since it
+            // is authoritative and must not substitute a different block. Only the
+            // client may opt into letting vanilla fall back.
+            if (!clientSide || ClientOptions.suppressMissingSupport) {
                 tryAlternative = null;
             } else {
-                // Hand the decision back to vanilla, which may place a substitute.
                 return;
             }
         }

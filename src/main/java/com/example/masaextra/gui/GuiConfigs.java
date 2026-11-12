@@ -1,9 +1,11 @@
 package com.example.masaextra.gui;
 
 import com.example.masaextra.ExactPlaceConfig;
+import com.example.masaextra.network.ServerSupport;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
 import java.util.ArrayList;
@@ -44,16 +46,21 @@ public class GuiConfigs extends GuiConfigsBase {
         switch (tab) {
             case ALL -> {
                 // Every option this mod has, so this tab is a complete overview.
+                // Options that integrate with another mod also appear on that mod's
+                // own tab, below.
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.USE_SERVER_EXACT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_COOLDOWN_MS));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE_RANGE));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_TRIGGER));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
-                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEDUPE_TILL_SOUND));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEBUG_MODE));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.CHAT_DEBUG));
@@ -63,19 +70,36 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_COOLDOWN_MS));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE_RANGE));
             }
             case TWEAKEROO -> {
-                // The position snap is driven by Tweakeroo's snap aim or by its own
-                // hotkey, so it belongs on this tab rather than under Litematica.
+                // Driven by Tweakeroo's snap aim switch and its gamma override.
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_ENABLED));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_TRIGGER));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
-                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEDUPE_TILL_SOUND));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
             }
+            case TWEAKERMORE ->
+                // Driven by Tweakermore's auto-collect-material-list switch.
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
             case OMMC -> list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));
         }
         return list;
+    }
+
+    /**
+     * Status line pinned to the bottom of the screen.
+     *
+     * <p>Drawn rather than added as a config entry: a config entry renders as an
+     * editable widget, and this value must be read-only. Drawing also keeps it out
+     * of the option list and out of the saved config entirely.
+     */
+    @Override
+    public void drawContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawContents(guiGraphics, mouseX, mouseY, partialTicks);
+        this.drawString(guiGraphics, ServerSupport.getServerInfoText(), 12, this.height - 14, 0xFF9E9E9E);
     }
 
     @Override
@@ -84,10 +108,16 @@ public class GuiConfigs extends GuiConfigsBase {
         ExactPlaceConfig.INSTANCE.save();
     }
 
+    /**
+     * One tab per integrated mod, named after that mod, plus an overview tab.
+     * Any new integration gets its own entry here rather than being folded into
+     * an unrelated tab.
+     */
     private enum ConfigGuiTab {
         ALL("masaextra.gui.tab.all"),
         LITEMATICA("masaextra.gui.tab.litematica"),
         TWEAKEROO("masaextra.gui.tab.tweakeroo"),
+        TWEAKERMORE("masaextra.gui.tab.tweakermore"),
         OMMC("masaextra.gui.tab.ommc");
 
         private final String translationKey;

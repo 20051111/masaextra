@@ -1,13 +1,19 @@
 package com.example.masaextra;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
 import com.example.masaextra.config.SnapAlignTrigger;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
+import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
+import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -39,6 +45,20 @@ public final class ExactPlaceConfig implements IConfigHandler {
     public static final ConfigBoolean SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT =
             new ConfigBoolean("masaextraSuppressEasyPlaceOnAutoCollect", false,
                     "Turn easy place off while Tweakermore's auto collect material list item is running, then restore it");
+    /** Read-only status line, refreshed when the config GUI opens. */
+    public static final ConfigString SERVER_INFO =
+            new ConfigString("masaextraServerInfo", "",
+                    "Server-side MasaExtra presence and version (refreshed when the config screen opens)");
+    public static final ConfigBooleanHotkeyed AUTO_TOGGLE_EASY_PLACE =
+            new ConfigBooleanHotkeyed("masaextraAutoToggleEasyPlace", false, "",
+                    "Turn easy place on only while aiming at a schematic block, and off otherwise. "
+                            + "Hold the hotkey on the same row to engage it temporarily.");
+    public static final ConfigDouble AUTO_TOGGLE_EASY_PLACE_RANGE =
+            new ConfigDouble("masaextraAutoToggleEasyPlaceRange", 6.0D, 1.0D, 32.0D,
+                    "Schematic block search distance for the automatic easy place toggle, in blocks");
+    public static final ConfigBoolean DEDUPE_TILL_SOUND =
+            new ConfigBoolean("masaextraDedupeTillSound", false,
+                    "Play the hoe tilling sound once per block per tick, so fast right click stops stacking it");
     public static final ConfigBoolean REFRESH_GAMMA_ON_JOIN =
             new ConfigBoolean("masaextraRefreshGammaOnJoin", false,
                     "Re-apply Tweakeroo's gamma override after the first world join");
@@ -81,10 +101,14 @@ public final class ExactPlaceConfig implements IConfigHandler {
                 SNAP_TO_BLOCK_CENTER_TRIGGER.setOptionListValue(
                         SnapAlignTrigger.fromStringStatic(root.get("masaextraSnapAlignTrigger").getAsString()));
             }
-            if (root.has("masaextraSnapAlignHotkey")) {
-                SNAP_TO_BLOCK_CENTER_HOTKEY.setValueFromString(root.get("masaextraSnapAlignHotkey").getAsString());
-            }
+            readKeybind(root, "masaextraSnapAlignHotkey", SNAP_TO_BLOCK_CENTER_HOTKEY.getKeybind());
         read(root, "masaextraSuppressEasyPlaceOnAutoCollect", SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT);
+            read(root, "masaextraAutoToggleEasyPlace", AUTO_TOGGLE_EASY_PLACE);
+            readKeybind(root, "masaextraAutoToggleEasyPlaceHotkey", AUTO_TOGGLE_EASY_PLACE.getKeybind());
+            if (root.has("masaextraAutoToggleEasyPlaceRange")) {
+                AUTO_TOGGLE_EASY_PLACE_RANGE.setDoubleValue(root.get("masaextraAutoToggleEasyPlaceRange").getAsDouble());
+            }
+            read(root, "masaextraDedupeTillSound", DEDUPE_TILL_SOUND);
             read(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             read(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             read(root, "masaextraChatDebug", CHAT_DEBUG);
@@ -106,8 +130,12 @@ public final class ExactPlaceConfig implements IConfigHandler {
             write(root, "masaextraSuppressMissingSupport", SUPPRESS_MISSING_SUPPORT);
             write(root, "masaextraSnapAlignEnabled", SNAP_TO_BLOCK_CENTER_ENABLED);
             root.addProperty("masaextraSnapAlignTrigger", SNAP_TO_BLOCK_CENTER_TRIGGER.getOptionListValue().getStringValue());
-            root.addProperty("masaextraSnapAlignHotkey", SNAP_TO_BLOCK_CENTER_HOTKEY.getStringValue());
+            writeKeybind(root, "masaextraSnapAlignHotkey", SNAP_TO_BLOCK_CENTER_HOTKEY.getKeybind());
         write(root, "masaextraSuppressEasyPlaceOnAutoCollect", SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT);
+            write(root, "masaextraAutoToggleEasyPlace", AUTO_TOGGLE_EASY_PLACE);
+            writeKeybind(root, "masaextraAutoToggleEasyPlaceHotkey", AUTO_TOGGLE_EASY_PLACE.getKeybind());
+            root.addProperty("masaextraAutoToggleEasyPlaceRange", AUTO_TOGGLE_EASY_PLACE_RANGE.getDoubleValue());
+            write(root, "masaextraDedupeTillSound", DEDUPE_TILL_SOUND);
             write(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             write(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             write(root, "masaextraChatDebug", CHAT_DEBUG);
@@ -117,6 +145,40 @@ public final class ExactPlaceConfig implements IConfigHandler {
             Files.createDirectories(FILE.getParent());
             Files.writeString(FILE, new GsonBuilder().setPrettyPrinting().create().toJson(root));
         } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * Keybinds are stored as raw GLFW key codes.
+     *
+     * <p>{@code IKeybind.getStringValue()} and {@code setValueFromString} are not
+     * symmetric in this malilib build - the former produces a display name like
+     * "G" while the latter resolves through {@code KeyCodes.getKeyCodeFromName},
+     * which does not accept that form. Round-tripping through the string left the
+     * keybind empty, so the stored hotkey silently stopped working after a
+     * restart. Storing the codes avoids the conversion entirely.
+     */
+    private static void writeKeybind(JsonObject root, String key, IKeybind keybind) {
+        JsonArray array = new JsonArray();
+        for (int code : keybind.getKeys()) {
+            array.add(code);
+        }
+        root.add(key, array);
+    }
+
+    private static void readKeybind(JsonObject root, String key, IKeybind keybind) {
+        if (!root.has(key)) {
+            return;
+        }
+        JsonElement element = root.get(key);
+        keybind.clearKeys();
+        if (element.isJsonArray()) {
+            for (JsonElement entry : element.getAsJsonArray()) {
+                keybind.addKey(entry.getAsInt());
+            }
+        } else if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            // Legacy string form written by earlier builds.
+            keybind.setValueFromString(element.getAsString());
         }
     }
 

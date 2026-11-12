@@ -4,6 +4,7 @@ import com.example.masaextra.network.HelloPacket;
 import com.example.masaextra.network.HiPacket;
 import com.example.masaextra.network.PlacePacket;
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -38,6 +39,13 @@ public class ExactPlaceServer implements DedicatedServerModInitializer {
     private static final Set<UUID> extraProtocolPlayers = new HashSet<>();
     private static final Map<UUID, Deque<Long>> RATE = new HashMap<>();
 
+    /** This build's version string, reported back so the client can display it. */
+    private static String masaextra$modVersion() {
+        return FabricLoader.getInstance().getModContainer("masaextra")
+                .map(container -> container.getMetadata().getVersion().getFriendlyString())
+                .orElse("");
+    }
+
     @Override
     public void onInitializeServer() {
         ServerConfig.load();
@@ -49,7 +57,7 @@ public class ExactPlaceServer implements DedicatedServerModInitializer {
                 return;
             }
             extraProtocolPlayers.add(player.getUUID());
-            ServerPlayNetworking.send(player, new HelloPacket(1));
+            ServerPlayNetworking.send(player, new HelloPacket(1, masaextra$modVersion()));
             LOGGER.info("[masaextra] HI from {} -> HI_ACK", name(player));
         });
 

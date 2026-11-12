@@ -4,7 +4,10 @@ import com.example.masaextra.network.HelloPacket;
 import com.example.masaextra.network.HiPacket;
 import com.example.masaextra.network.ServerSupport;
 import fi.dy.masa.malilib.config.ConfigManager;
+import com.example.masaextra.compat.AutoEasyPlaceCompat;
+import com.example.masaextra.compat.MasaExtraKeybindProvider;
 import com.example.masaextra.compat.TweakermoreAutoCollectCompat;
+import com.example.masaextra.protocol.ClientOptions;
 import com.example.masaextra.compat.TweakerooSnapAimCompat;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -47,10 +50,14 @@ public class ExactPlaceClient implements ClientModInitializer {
         com.example.masaextra.protocol.BlockPlacer.DEBUG_ENABLED = ExactPlaceConfig.DEBUG_MODE.getBooleanValue();
         ConfigManager.getInstance().registerConfigHandler("masaextra", ExactPlaceConfig.INSTANCE);
 
+        // Same pattern as Tweakeroo / Tweakermore: without a keybind provider the
+        // hotkeys never reach malilib's key map and can never fire.
+        MasaExtraKeybindProvider.register();
+
         ClientPlayNetworking.registerGlobalReceiver(HelloPacket.TYPE, (packet, client, sender) -> {
             if (packet.protocolVersion() >= 1) {
-                ServerSupport.setAvailable(true);
-                debug("received HI_ACK -> ServerSupport=true");
+                ServerSupport.setServerInfo(packet.protocolVersion(), packet.modVersion());
+                debug("received HI_ACK -> ServerSupport=true (server version={})", packet.modVersion());
             }
         });
 
@@ -70,6 +77,13 @@ public class ExactPlaceClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            // Mirror the client-only options into the plain-boolean holder the
+            // shared mixins read, so those classes never touch malilib types.
+            ClientOptions.sync(
+                    ExactPlaceConfig.ENABLED.getBooleanValue(),
+                    ExactPlaceConfig.USE_SERVER_EXACT.getBooleanValue(),
+                    ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA.getBooleanValue(),
+                    ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT.getBooleanValue());
             GammaRefresher.tick(client);
             // Keep retrying while connected but unconfirmed: the JOIN event can
             // fire before the channel exists, and a missed HI_ACK would otherwise
@@ -107,6 +121,8 @@ public class ExactPlaceClient implements ClientModInitializer {
             }
             handshakeTicks++;
         });
+
+        AutoEasyPlaceCompat.register();
 
         // Optional integration: the class references Tweakeroo types, so it is
         // only touched when the mod is actually present. The catch keeps a

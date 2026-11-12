@@ -46,6 +46,8 @@
     "litematica.MixinWorldUtilsLitematicaProtocol",
     "litematica.MixinPlacementHandlerLitematicaProtocol",
     "MixinEasyPlaceCooldown",
+    "vanilla.MixinHoeItemTillSound",
+    "MixinInfoUtilsToggleMessage",
     "MixinOmmcHighlightEntity"
   ],
   "injectors": {
