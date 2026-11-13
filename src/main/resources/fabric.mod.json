@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "masaextra",
+  "version": "${version}",
+  "name": "Masa Extra",
+  "description": "Masa Extra: Exact Place + client utilities for Masa mods.",
+  "authors": ["test"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.example.masaextra.ExactPlaceClient"
+    ],
+    "server": [
+      "com.example.masaextra.server.ExactPlaceServer"
+    ],
+    "modmenu": [
+      "com.example.masaextra.compat.ExactPlaceModMenuApi"
+    ]
+  },
+  "mixins": [
+    "masaextra.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21.8",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "litematica": "*",
+    "malilib": "*",
+    "modmenu": "*",
+    "ommc": "*",
+    "tweakeroo": "*",
+    "tweakermore": "*",
+    "carpet-extra": "*"
+  }
+}

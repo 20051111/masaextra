@@ -1,0 +1,31 @@
+package com.example.masaextra.mixin.vanilla;
+
+import com.example.masaextra.protocol.BlockProtocolStateAdapter;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.FrontAndTop;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+
+/**
+ * Port of chenjunfu2/EarlyCompat $Doc.
+ */
+@Mixin(net.minecraft.world.level.block.JigsawBlock.class)
+public abstract class MixinJigsawBlockVanillaProtocol implements BlockProtocolStateAdapter {
+    @Override
+    public int toProtocolValue(int protocolValue, BlockState fromState) {
+        return fromState.getValue(net.minecraft.world.level.block.JigsawBlock.ORIENTATION).ordinal() & 0b0000_1111;
+    }
+
+    @Override
+    public @Nullable BlockState fromProtocolValue(int extraProtocolValue, BlockState fromState, BlockPlaceContext context) {
+        int orientationOrdinal = (extraProtocolValue & 0b0000_1111) % 12;
+        return fromState.setValue(net.minecraft.world.level.block.JigsawBlock.ORIENTATION, FrontAndTop.values()[orientationOrdinal]);
+    }
+
+    @Override
+    public @NotNull ProtocolType getProtocolType() {
+        return ProtocolType.REPLACE;
+    }
+}

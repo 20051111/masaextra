@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'LocalPreloaded'
+            url = 'file:///C:/Users/Danil/Desktop/MINECR~1/versions/120~1.4TE/_build/m2'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'masaextra'

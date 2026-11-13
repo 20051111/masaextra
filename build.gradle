@@ -1,0 +1,85 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+}
+
+repositories {
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+    }
+}
+
+/**
+ * Build-environment note (not a mod requirement): this tree sits on a volume
+ * where directories carried a Low integrity label plus a "deny
+ * delete-subdirectories" entry, which made Java's Files.isWritable() report
+ * false everywhere. Loom writes its layered mappings through the NIO zip
+ * filesystem and checks that flag, so it failed with ReadOnlyFileSystemException
+ * before compiling anything. Fixed outside this script by raising the integrity
+ * level and dropping that deny entry; nothing here depends on it.
+ */
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    modImplementation "maven.modrinth:litematica:${litematica_version}"
+    modImplementation "maven.modrinth:malilib:${malilib_version}"
+    modCompileOnly "maven.modrinth:modmenu:${modmenu_version}"
+
+    // MixinExtras ships with modern Fabric Loader at runtime, so this is compile
+    // only: the @Local / @WrapOperation annotations need the API to resolve.
+    compileOnly files('libs/mixinextras-fabric-0.5.5.jar')
+
+    // carpet-extra supplies carpet's accurateBlockPlacement rule. Compile only:
+    // it is never required at runtime, all access is reflective or gated.
+    modCompileOnly files('libs/carpet-extra-1.20.3-1.4.128.jar')
+
+    // tweakeroo supplies the snap aim toggle the position snap hooks into.
+    // Compile only: the integration sits behind an isModLoaded check and is
+    // never referenced when the mod is absent.
+    modCompileOnly files('libs/tweakeroo-fabric-1.20.4-0.19.4.jar')
+
+    // tweakermore supplies the auto-collect-material-list toggle that suspends
+    // easy place. Compile only, gated behind an isModLoaded check.
+    modCompileOnly files('libs/tweakermore-v3.33.2-mc1.20.4.jar')
+
+    // pinyin4j supplies the hanzi-to-pinyin table used by the search boxes.
+    // Unlike the mod jars above this one is *shaded into our jar*: it is a plain
+    // Java library that is not installed by any other mod, so a compile-only
+    // dependency would leave the feature dead on every client that does not also
+    // happen to run WuHuClient.
+    compileOnly files('libs/pinyin4j-2.5.1.jar')
+}
+
+// Shade pinyin4j into the output jar so the pinyin search works standalone.
+// The dependency carries a fabric.mod.json and META-INF metadata from when it was
+// nested inside another mod; both are dropped here, otherwise our own
+// fabric.mod.json collides and the jar task fails on the duplicate entry.
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(zipTree('libs/pinyin4j-2.5.1.jar')) {
+        exclude 'META-INF/**'
+        exclude 'fabric.mod.json'
+    }
+}
+
+processResources {
+    def modVersion = project.version
+    inputs.property 'version', modVersion
+    filesMatching('fabric.mod.json') {
+        expand 'version': modVersion
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+    it.options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
