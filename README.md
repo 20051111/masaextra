@@ -28,6 +28,7 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 
 - **自动开关轻松放置**：只在准星指向投影方块时开启 easy place，移开即关闭，判定复用 Litematica 自己的射线检测。带一个可绑定热键，按一下切换。
 - **耕地音效去重**：Tweakeroo 的快速连点每 tick 会对同一格调用十次 `useOn`，而 `HoeItem` 在判 `isClientSide` 之前就播放音效，导致一次耕地响十声。开启后同格同 tick 只响一次。
+- **双语搜索**：一个开关同时支持中文、拼音、英文三种匹配。中文直接比原文；拼音用 pinyin4j（已随包分发），全拼 `hongshi` 和首字母 `hshb` 都行；英文名从各 mod 的 `en_us.json` 读取，中文客户端也能用 `redstone` 搜到「红石火把」。覆盖配置列表、创造物品栏和配方书。
 - **开关提示本地化**：修正 malilib 把 `malilib.message.on` 当键（实际键是 `malilib.message.value.on`）导致的字幕显示键名问题，对所有 mod 的开关提示都生效。
 
 ---
@@ -53,6 +54,7 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 | 吸附热键 | `masaextraSnapAlignHotkey` | 热键 | 空 |
 | 自动取材料时暂停轻松放置 | `masaextraSuppressEasyPlaceOnAutoCollect` | 布尔 | `false` |
 | 耕地音效去重 | `masaextraDedupeTillSound` | 布尔 | `false` |
+| 双语搜索 | `masaextraBilingualSearch` | 布尔 | `false` |
 | 进入世界刷新 Gamma | `masaextraRefreshGammaOnJoin` | 布尔 | `false` |
 | OMMC 高亮实体严格匹配 | `masaextraOmmcHighlightStrictMatch` | 布尔 | `false` |
 | 调试模式 | `masaextraDebugMode` | 布尔 | `false` |
@@ -122,3 +124,11 @@ Litematica 原生的 V2 协议只能表达水平朝向，楼梯的形态、台�
 ## 许可
 
 代码为本项目的原创移植工作。`libs/` 下的第三方 jar 版权归各自作者所有，仅作编译期依赖。
+
+---
+
+## 发布说明规范
+
+GitHub Release 的正文使用**中英双语**：先中文，`---` 分隔，后英文。
+
+允许写英文，但中文必须保留在同一份说明里，不能只留英文。

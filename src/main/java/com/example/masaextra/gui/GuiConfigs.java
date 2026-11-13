@@ -60,7 +60,11 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SNAP_TO_BLOCK_CENTER_HOTKEY));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_MATERIAL_LIST_ON_COLLECT));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEDUPE_TILL_SOUND));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.BILINGUAL_SEARCH));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SYNCMATICA_RESYNC));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.RESTORE_PLACEMENT_SELECTION));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEBUG_MODE));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.CHAT_DEBUG));
@@ -72,6 +76,9 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.AUTO_TOGGLE_EASY_PLACE_RANGE));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.BILINGUAL_SEARCH));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.SYNCMATICA_RESYNC));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.RESTORE_PLACEMENT_SELECTION));
             }
             case TWEAKEROO -> {
                 // Driven by Tweakeroo's snap aim switch and its gamma override.
@@ -81,9 +88,11 @@ public class GuiConfigs extends GuiConfigsBase {
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.DEDUPE_TILL_SOUND));
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_GAMMA_ON_JOIN));
             }
-            case TWEAKERMORE ->
+            case TWEAKERMORE -> {
                 // Driven by Tweakermore's auto-collect-material-list switch.
                 list.add(new ConfigOptionWrapper(ExactPlaceConfig.SUPPRESS_EASY_PLACE_ON_AUTO_COLLECT));
+                list.add(new ConfigOptionWrapper(ExactPlaceConfig.REFRESH_MATERIAL_LIST_ON_COLLECT));
+            }
             case OMMC -> list.add(new ConfigOptionWrapper(ExactPlaceConfig.OMMC_HIGHLIGHT_STRICT_MATCH));
         }
         return list;

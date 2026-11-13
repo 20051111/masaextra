@@ -45,9 +45,14 @@
   "client": [
     "litematica.MixinWorldUtilsLitematicaProtocol",
     "litematica.MixinPlacementHandlerLitematicaProtocol",
+    "litematica.MixinPlacementSelectionPersist",
+    "litematica.MixinGuiSchematicPlacementsListSelection",
+    "litematica.MixinGuiPlacementConfigurationSelection",
     "MixinEasyPlaceCooldown",
     "vanilla.MixinHoeItemTillSound",
     "MixinInfoUtilsToggleMessage",
+    "pinyin.MixinWidgetListBasePinyin",
+    "pinyin.MixinSuffixArrayPinyin",
     "MixinOmmcHighlightEntity"
   ],
   "injectors": {

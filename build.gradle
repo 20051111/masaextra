@@ -45,6 +45,25 @@ dependencies {
     // tweakermore supplies the auto-collect-material-list toggle that suspends
     // easy place. Compile only, gated behind an isModLoaded check.
     modCompileOnly files('libs/tweakermore-v3.33.2-mc1.20.4.jar')
+
+    // pinyin4j supplies the hanzi-to-pinyin table used by the search boxes.
+    // Unlike the mod jars above this one is *shaded into our jar*: it is a plain
+    // Java library that is not installed by any other mod, so a compile-only
+    // dependency would leave the feature dead on every client that does not also
+    // happen to run WuHuClient.
+    compileOnly files('libs/pinyin4j-2.5.1.jar')
+}
+
+// Shade pinyin4j into the output jar so the pinyin search works standalone.
+// The dependency carries a fabric.mod.json and META-INF metadata from when it was
+// nested inside another mod; both are dropped here, otherwise our own
+// fabric.mod.json collides and the jar task fails on the duplicate entry.
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(zipTree('libs/pinyin4j-2.5.1.jar')) {
+        exclude 'META-INF/**'
+        exclude 'fabric.mod.json'
+    }
 }
 
 processResources {

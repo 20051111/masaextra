@@ -59,6 +59,22 @@ public final class ExactPlaceConfig implements IConfigHandler {
     public static final ConfigBoolean DEDUPE_TILL_SOUND =
             new ConfigBoolean("masaextraDedupeTillSound", false,
                     "Play the hoe tilling sound once per block per tick, so fast right click stops stacking it");
+    public static final ConfigBoolean BILINGUAL_SEARCH =
+            new ConfigBoolean("masaextraBilingualSearch", false,
+                    "Allow Chinese, English and pinyin in search boxes at once - search a Chinese client by English "
+                            + "or pinyin. Also enables pinyin when that switch is off");
+    public static final ConfigBoolean SYNCMATICA_RESYNC =
+            new ConfigBoolean("masaextraSyncmaticaResync", false,
+                    "Re-register Syncmatica placements that were dropped during the join handshake. "
+                            + "Fixes shared schematics occasionally not appearing until reloaded by hand");
+    public static final ConfigBoolean RESTORE_PLACEMENT_SELECTION =
+            new ConfigBoolean("masaextraRestorePlacementSelection", false,
+                    "Remember the selected schematic placement by name. Litematica stores it as a list index, "
+                            + "which shifts when Syncmatica adds shared placements in a different order");
+    public static final ConfigBoolean REFRESH_MATERIAL_LIST_ON_COLLECT =
+            new ConfigBoolean("masaextraRefreshMaterialListOnCollect", false,
+                    "Recompute the loaded schematic material list on the rising edge of Tweakermore's "
+                            + "auto-collect hotkey, so it collects against fresh numbers");
     public static final ConfigBoolean REFRESH_GAMMA_ON_JOIN =
             new ConfigBoolean("masaextraRefreshGammaOnJoin", false,
                     "Re-apply Tweakeroo's gamma override after the first world join");
@@ -109,6 +125,10 @@ public final class ExactPlaceConfig implements IConfigHandler {
                 AUTO_TOGGLE_EASY_PLACE_RANGE.setDoubleValue(root.get("masaextraAutoToggleEasyPlaceRange").getAsDouble());
             }
             read(root, "masaextraDedupeTillSound", DEDUPE_TILL_SOUND);
+            read(root, "masaextraBilingualSearch", BILINGUAL_SEARCH);
+            read(root, "masaextraSyncmaticaResync", SYNCMATICA_RESYNC);
+            read(root, "masaextraRestorePlacementSelection", RESTORE_PLACEMENT_SELECTION);
+            read(root, "masaextraRefreshMaterialListOnCollect", REFRESH_MATERIAL_LIST_ON_COLLECT);
             read(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             read(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             read(root, "masaextraChatDebug", CHAT_DEBUG);
@@ -136,6 +156,10 @@ public final class ExactPlaceConfig implements IConfigHandler {
             writeKeybind(root, "masaextraAutoToggleEasyPlaceHotkey", AUTO_TOGGLE_EASY_PLACE.getKeybind());
             root.addProperty("masaextraAutoToggleEasyPlaceRange", AUTO_TOGGLE_EASY_PLACE_RANGE.getDoubleValue());
             write(root, "masaextraDedupeTillSound", DEDUPE_TILL_SOUND);
+            write(root, "masaextraBilingualSearch", BILINGUAL_SEARCH);
+            write(root, "masaextraSyncmaticaResync", SYNCMATICA_RESYNC);
+            write(root, "masaextraRestorePlacementSelection", RESTORE_PLACEMENT_SELECTION);
+            write(root, "masaextraRefreshMaterialListOnCollect", REFRESH_MATERIAL_LIST_ON_COLLECT);
             write(root, "masaextraRefreshGammaOnJoin", REFRESH_GAMMA_ON_JOIN);
             write(root, "masaextraOmmcHighlightStrictMatch", OMMC_HIGHLIGHT_STRICT_MATCH);
             write(root, "masaextraChatDebug", CHAT_DEBUG);

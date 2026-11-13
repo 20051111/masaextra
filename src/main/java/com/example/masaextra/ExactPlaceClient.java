@@ -6,6 +6,7 @@ import com.example.masaextra.network.ServerSupport;
 import fi.dy.masa.malilib.config.ConfigManager;
 import com.example.masaextra.compat.AutoEasyPlaceCompat;
 import com.example.masaextra.compat.MasaExtraKeybindProvider;
+import com.example.masaextra.compat.SyncmaticaResync;
 import com.example.masaextra.compat.TweakermoreAutoCollectCompat;
 import com.example.masaextra.protocol.ClientOptions;
 import com.example.masaextra.compat.TweakerooSnapAimCompat;
@@ -69,11 +70,13 @@ public class ExactPlaceClient implements ClientModInitializer {
                 sendHi("JOIN");
             }
             GammaRefresher.onJoin();
+            SyncmaticaResync.onJoin();
         });
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ServerSupport.setAvailable(false);
             handshakeTicks = 0;
             warnedHandshakeTimeout = false;
+            SyncmaticaResync.onDisconnect();
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -85,6 +88,7 @@ public class ExactPlaceClient implements ClientModInitializer {
                     ExactPlaceConfig.EASY_PLACE_V2_PROTOCOL_EXTRA.getBooleanValue(),
                     ExactPlaceConfig.SUPPRESS_MISSING_SUPPORT.getBooleanValue());
             GammaRefresher.tick(client);
+            SyncmaticaResync.onTick();
             // Keep retrying while connected but unconfirmed: the JOIN event can
             // fire before the channel exists, and a missed HI_ACK would otherwise
             // disable the whole protocol for the session.
@@ -137,6 +141,7 @@ public class ExactPlaceClient implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("tweakermore")) {
             try {
                 TweakermoreAutoCollectCompat.register();
+        SyncmaticaResync.register();
             } catch (Throwable t) {
                 LOGGER.warn("[masaextra] Tweakermore auto-collect integration unavailable", t);
             }
